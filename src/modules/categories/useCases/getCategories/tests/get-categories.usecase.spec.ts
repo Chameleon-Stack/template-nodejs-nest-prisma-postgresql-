@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { getRepositoryToken } from '@nestjs/typeorm';
-import { CategoryEntity } from '../../../entities/category.entity';
+import { PrismaService } from '../../../../../prisma.service';
+import { CategoryEntityInterface } from '../../../interfaces/category-entity.interface';
 import { CategoryRepository } from '../../../repositories/category.repository';
 import { GetCategoriesUseCase } from '../get-categories.usecase';
 
@@ -13,7 +13,7 @@ describe('Get categories UseCase', () => {
       providers: [
         GetCategoriesUseCase,
         {
-          provide: getRepositoryToken(CategoryRepository),
+          provide: PrismaService,
           useValue: {
             findAll: jest.fn(),
           },
@@ -24,9 +24,8 @@ describe('Get categories UseCase', () => {
     getCategoriesUseCase =
       module.get<GetCategoriesUseCase>(GetCategoriesUseCase);
 
-    repositoryCategory = await module.resolve<CategoryRepository>(
-      getRepositoryToken(CategoryRepository),
-    );
+    repositoryCategory =
+      await module.resolve<CategoryRepository>(PrismaService);
   });
 
   afterEach(() => {
@@ -44,7 +43,7 @@ describe('Get categories UseCase', () => {
         id: '2',
         user_id: 'uuid',
         name: 'Test category',
-      } as CategoryEntity,
+      } as CategoryEntityInterface,
     ];
 
     const findByIdUserSpy = jest

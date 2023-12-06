@@ -1,9 +1,8 @@
 import { HttpStatus, INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { getRepositoryToken } from '@nestjs/typeorm';
 import request from 'supertest';
-import { UserEntity } from '../../../entities/user.entity';
-import { UserRepository } from '../../../repositories/user.repository';
+import { PrismaService } from '../../../../../prisma.service';
+import { UserEntityInterface } from '../../../interfaces/user-entity.interface';
 import { GetUserByIdController } from '../get-user-by-id.controller';
 import { GetUserByIdUseCase } from '../get-user-by-id.usecase';
 
@@ -17,7 +16,7 @@ describe('Get user  by ID Controller', () => {
       providers: [
         GetUserByIdUseCase,
         {
-          provide: getRepositoryToken(UserRepository),
+          provide: PrismaService,
           useValue: {},
         },
       ],
@@ -47,7 +46,7 @@ describe('Get user  by ID Controller', () => {
       name: 'Test User',
       email: 'test@example.com',
       password: '******',
-    } as UserEntity;
+    } as UserEntityInterface;
 
     const getUserByIdUseCaseSpy = jest
       .spyOn(getUserByIdUseCase, 'execute')

@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { CardRepositoryInterface } from '../../repositories/interfaces/card-repository.interface';
+import { CardRepository } from '../../repositories/card.repository';
 
 @Injectable()
 export class DeleteCardUseCase {
-  constructor(private readonly cardRepository: CardRepositoryInterface) {}
+  constructor(private readonly cardRepository: CardRepository) {}
 
   public async execute(id: string): Promise<void> {
     const card = await this.cardRepository.findById(id);

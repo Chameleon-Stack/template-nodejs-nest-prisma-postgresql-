@@ -3,26 +3,19 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { FindAllCardsDTO } from '../../../cards/dtos/request/find-all-cards-request.dto';
 import { CardRepository } from '../../../cards/repositories/card.repository';
-import { CardRepositoryInterface } from '../../../cards/repositories/interfaces/card-repository.interface';
 import { CategoryRepository } from '../../../categories/repositories/category.repository';
-import { CategoryRepositoryInterface } from '../../../categories/repositories/interfaces/category-repository.interface';
-import { UserRepositoryInterface } from '../../repositories/interfaces/user-repository.interface';
 import { UserRepository } from '../../repositories/user.repository';
 
 @Injectable()
 export class DeleteUserUseCase {
   constructor(
-    @InjectRepository(UserRepository)
-    private readonly userRepository: UserRepositoryInterface,
+    private readonly userRepository: UserRepository,
 
-    @InjectRepository(CategoryRepository)
-    private readonly categoryRepository: CategoryRepositoryInterface,
+    private readonly categoryRepository: CategoryRepository,
 
-    @InjectRepository(CardRepository)
-    private readonly cardRepository: CardRepositoryInterface,
+    private readonly cardRepository: CardRepository,
   ) {}
 
   public async execute(id: string): Promise<void> {

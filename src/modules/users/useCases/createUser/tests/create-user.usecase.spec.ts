@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { getRepositoryToken } from '@nestjs/typeorm';
+import { PrismaService } from '../../../../../prisma.service';
 import { ICreateUserDTO } from '../../../dtos/request/create-user-request.dto';
-import { UserEntity } from '../../../entities/user.entity';
+import { UserEntityInterface } from '../../../interfaces/user-entity.interface';
 import { UserRepository } from '../../../repositories/user.repository';
 import { CreateUserUseCase } from '../create-user.usecase';
 
@@ -13,7 +13,7 @@ describe('Create user UseCase', () => {
       providers: [
         CreateUserUseCase,
         {
-          provide: getRepositoryToken(UserRepository),
+          provide: PrismaService,
           useValue: {
             findByEmail: jest.fn(),
             createAndSave: jest.fn(),
@@ -24,9 +24,7 @@ describe('Create user UseCase', () => {
 
     createUserUseCase = module.get<CreateUserUseCase>(CreateUserUseCase);
 
-    repository = await module.resolve<UserRepository>(
-      getRepositoryToken(UserRepository),
-    );
+    repository = await module.resolve<UserRepository>(PrismaService);
   });
 
   afterEach(() => {
@@ -45,7 +43,7 @@ describe('Create user UseCase', () => {
       password: '******',
     } as ICreateUserDTO;
 
-    const userCreated = Object.assign(user, { id: '1' }) as UserEntity;
+    const userCreated = Object.assign(user, { id: '1' }) as UserEntityInterface;
 
     const findByEmailUserSpy = jest
       .spyOn(repository, 'findByEmail')

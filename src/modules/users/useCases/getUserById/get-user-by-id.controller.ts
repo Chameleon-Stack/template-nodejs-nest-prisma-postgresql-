@@ -3,7 +3,7 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { BaseControllerInterface } from '../../../../common/interfaces/base-controller.interface';
 import { CustomApiResponseGetDataWrapper } from '../../../../system/decorators/swagger/api-response-get.decorator';
 import { UserEntityDTO } from '../../dtos/response/user.entity.dto';
-import { UserEntity } from '../../entities/user.entity';
+import { UserEntityInterface } from '../../interfaces/user-entity.interface';
 import { GetUserByIdUseCase } from './get-user-by-id.usecase';
 
 @ApiTags('User')
@@ -20,7 +20,7 @@ export class GetUserByIdController implements BaseControllerInterface {
   })
   public async handle(
     @Param('id', new ParseUUIDPipe()) id: string,
-  ): Promise<UserEntity> {
+  ): Promise<UserEntityInterface> {
     return this.getUserByIdUseCase.execute(id);
   }
 }

@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { getRepositoryToken } from '@nestjs/typeorm';
+import { PrismaService } from '../../../../../prisma.service';
 import { UserRepository } from '../../../repositories/user.repository';
 import { SessionUseCase } from '../session.usecase';
 
@@ -11,7 +11,7 @@ describe('Delete user UseCase', () => {
       providers: [
         SessionUseCase,
         {
-          provide: getRepositoryToken(UserRepository),
+          provide: PrismaService,
           useValue: {
             findByEmail: jest.fn(),
             createAndSave: jest.fn(),
@@ -22,9 +22,7 @@ describe('Delete user UseCase', () => {
 
     sessionUseCase = module.get<SessionUseCase>(SessionUseCase);
 
-    repository = await module.resolve<UserRepository>(
-      getRepositoryToken(UserRepository),
-    );
+    repository = await module.resolve<UserRepository>(PrismaService);
   });
 
   afterEach(() => {

@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { getRepositoryToken } from '@nestjs/typeorm';
-import { CategoryEntity } from '../../../entities/category.entity';
+import { PrismaService } from '../../../../../prisma.service';
+import { CategoryEntityInterface } from '../../../interfaces/category-entity.interface';
 import { CategoryRepository } from '../../../repositories/category.repository';
 import { DeleteCategoryUseCase } from '../delete-category.usecase';
 
@@ -13,7 +13,7 @@ describe('Delete category UseCase', () => {
       providers: [
         DeleteCategoryUseCase,
         {
-          provide: getRepositoryToken(CategoryRepository),
+          provide: PrismaService,
           useValue: {
             findById: jest.fn(),
             deleteCategory: jest.fn(),
@@ -26,9 +26,8 @@ describe('Delete category UseCase', () => {
       DeleteCategoryUseCase,
     );
 
-    repositoryCategory = await module.resolve<CategoryRepository>(
-      getRepositoryToken(CategoryRepository),
-    );
+    repositoryCategory =
+      await module.resolve<CategoryRepository>(PrismaService);
   });
 
   afterEach(() => {
@@ -45,7 +44,7 @@ describe('Delete category UseCase', () => {
       id: '1',
       user_id: 'uuid',
       name: 'Test category',
-    } as CategoryEntity;
+    } as CategoryEntityInterface;
 
     const findByIdCategorySpy = jest
       .spyOn(repositoryCategory, 'findById')

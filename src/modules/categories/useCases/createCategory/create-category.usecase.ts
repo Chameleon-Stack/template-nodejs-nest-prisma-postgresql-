@@ -3,24 +3,22 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { UserRepositoryInterface } from '../../../users/repositories/interfaces/user-repository.interface';
 import { UserRepository } from '../../../users/repositories/user.repository';
-import { CategoryEntity } from '../../entities/category.entity';
+import { CategoryEntityInterface } from '../../interfaces/category-entity.interface';
 import { CategoryRepository } from '../../repositories/category.repository';
-import { CategoryRepositoryInterface } from '../../repositories/interfaces/category-repository.interface';
 
 @Injectable()
 export class CreateCategoryUseCase {
   constructor(
-    @InjectRepository(CategoryRepository)
-    private readonly categoryRepository: CategoryRepositoryInterface,
+    private readonly categoryRepository: CategoryRepository,
 
-    @InjectRepository(UserRepository)
-    private readonly userRepository: UserRepositoryInterface,
+    private readonly userRepository: UserRepository,
   ) {}
 
-  public async execute(name: string, user_id: string): Promise<CategoryEntity> {
+  public async execute(
+    name: string,
+    user_id: string,
+  ): Promise<CategoryEntityInterface> {
     if (!name || !user_id) {
       throw new BadRequestException('Name/User id is required!');
     }

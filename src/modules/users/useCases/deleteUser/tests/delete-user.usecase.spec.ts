@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { getRepositoryToken } from '@nestjs/typeorm';
-import { CardEntity } from '../../../../cards/entities/card.entity';
+import { PrismaService } from '../../../../../prisma.service';
+import { CardEntityInterface } from '../../../../cards/interfaces/card-entity.interface';
 import { CardRepository } from '../../../../cards/repositories/card.repository';
-import { CategoryEntity } from '../../../../categories/entities/category.entity';
+import { CategoryEntityInterface } from '../../../../categories/interfaces/category-entity.interface';
 import { CategoryRepository } from '../../../../categories/repositories/category.repository';
-import { UserEntity } from '../../../entities/user.entity';
+import { UserEntityInterface } from '../../../interfaces/user-entity.interface';
 import { UserRepository } from '../../../repositories/user.repository';
 import { DeleteUserUseCase } from '../delete-user.usecase';
 
@@ -19,21 +19,21 @@ describe('Delete user UseCase', () => {
       providers: [
         DeleteUserUseCase,
         {
-          provide: getRepositoryToken(UserRepository),
+          provide: PrismaService,
           useValue: {
             findById: jest.fn(),
             deleteUser: jest.fn(),
           },
         },
         {
-          provide: getRepositoryToken(CategoryRepository),
+          provide: PrismaService,
           useValue: {
             findAll: jest.fn(),
             deleteCategory: jest.fn(),
           },
         },
         {
-          provide: getRepositoryToken(CardRepository),
+          provide: PrismaService,
           useValue: {
             findAll: jest.fn(),
             deleteCard: jest.fn(),
@@ -44,17 +44,12 @@ describe('Delete user UseCase', () => {
 
     deleteUserUseCase = module.get<DeleteUserUseCase>(DeleteUserUseCase);
 
-    repositoryUser = await module.resolve<UserRepository>(
-      getRepositoryToken(UserRepository),
-    );
+    repositoryUser = await module.resolve<UserRepository>(PrismaService);
 
-    repositoryCategory = await module.resolve<CategoryRepository>(
-      getRepositoryToken(CategoryRepository),
-    );
+    repositoryCategory =
+      await module.resolve<CategoryRepository>(PrismaService);
 
-    repositoryCard = await module.resolve<CardRepository>(
-      getRepositoryToken(CardRepository),
-    );
+    repositoryCard = await module.resolve<CardRepository>(PrismaService);
   });
 
   afterEach(() => {
@@ -74,17 +69,17 @@ describe('Delete user UseCase', () => {
       name: 'Test User',
       email: 'test@example.com',
       password: '******',
-    } as UserEntity;
+    } as UserEntityInterface;
 
     const findAllCardsSpy = jest
       .spyOn(repositoryCard, 'findAll')
-      .mockResolvedValueOnce([{} as CardEntity]);
+      .mockResolvedValueOnce([{} as CardEntityInterface]);
 
     const deleteCardSpy = jest.spyOn(repositoryCard, 'deleteCard');
 
     const findAllCategorysSpy = jest
       .spyOn(repositoryCategory, 'findAll')
-      .mockResolvedValueOnce([{} as CategoryEntity]);
+      .mockResolvedValueOnce([{} as CategoryEntityInterface]);
 
     const deleteCategorySpy = jest.spyOn(repositoryCategory, 'deleteCategory');
 

@@ -1,24 +1,19 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { genSaltSync, hashSync } from 'bcryptjs';
 import { ICreateUserDTO } from '../../dtos/request/create-user-request.dto';
-import { UserEntity } from '../../entities/user.entity';
-import { UserRepositoryInterface } from '../../repositories/interfaces/user-repository.interface';
+import { UserEntityInterface } from '../../interfaces/user-entity.interface';
 import { UserRepository } from '../../repositories/user.repository';
 
 @Injectable()
 export class CreateUserUseCase {
-  constructor(
-    @InjectRepository(UserRepository)
-    private readonly userRepository: UserRepositoryInterface,
-  ) {}
+  constructor(private readonly userRepository: UserRepository) {}
 
   public async execute({
     name,
     email,
     password,
     photo,
-  }: ICreateUserDTO): Promise<UserEntity> {
+  }: ICreateUserDTO): Promise<UserEntityInterface> {
     if (!name || !email || !password) {
       throw new BadRequestException('Missins params!');
     }
@@ -37,7 +32,7 @@ export class CreateUserUseCase {
       email,
       password: hash,
       photo,
-    })) as UserEntity;
+    })) as UserEntityInterface;
 
     return { ...user, password: '' };
   }

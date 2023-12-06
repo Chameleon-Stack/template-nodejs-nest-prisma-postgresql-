@@ -3,21 +3,16 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { compare, hash } from 'bcryptjs';
 import fs from 'fs';
 import path from 'path';
-import { UserEntity } from '../../entities/user.entity';
+import { UserEntityInterface } from '../../interfaces/user-entity.interface';
 import { UserRepositoryInterface } from '../../repositories/interfaces/user-repository.interface';
-import { UserRepository } from '../../repositories/user.repository';
 import { UpdateUserDTO } from './dtos/request/update-user-request.dto';
 
 @Injectable()
 export class UpdateUserUseCase {
-  constructor(
-    @InjectRepository(UserRepository)
-    private readonly userRepository: UserRepositoryInterface,
-  ) {}
+  constructor(private readonly userRepository: UserRepositoryInterface) {}
 
   public async execute({
     id,
@@ -26,7 +21,7 @@ export class UpdateUserUseCase {
     password,
     photo,
     new_password,
-  }: UpdateUserDTO): Promise<UserEntity> {
+  }: UpdateUserDTO): Promise<UserEntityInterface> {
     const user = await this.userRepository.findById(id);
 
     if (!user) {

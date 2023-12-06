@@ -3,17 +3,17 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { UserRepositoryInterface } from '../../../users/repositories/interfaces/user-repository.interface';
+import { UserRepository } from '../../../users/repositories/user.repository';
 import { CardEntityInterface } from '../../interfaces/card-entity.interface';
-import { CardRepositoryInterface } from '../../repositories/interfaces/card-repository.interface';
+import { CardRepository } from '../../repositories/card.repository';
 import { CreateCardDTO } from './dtos/request/create-card-request.dto';
 
 @Injectable()
 export class CreateCardUseCase {
   constructor(
-    private readonly cardRepository: CardRepositoryInterface,
+    private readonly cardRepository: CardRepository,
 
-    private readonly userRepository: UserRepositoryInterface,
+    private readonly userRepository: UserRepository,
   ) {}
 
   public async execute({

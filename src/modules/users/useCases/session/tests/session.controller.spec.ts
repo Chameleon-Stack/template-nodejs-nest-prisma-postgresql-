@@ -1,8 +1,7 @@
 import { HttpStatus, INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { getRepositoryToken } from '@nestjs/typeorm';
 import request from 'supertest';
-import { UserRepository } from '../../../repositories/user.repository';
+import { PrismaService } from '../../../../../prisma.service';
 import { SessionResponseDTO } from '../dtos/response/session-response.dto';
 import { SessionController } from '../session.controller';
 import { SessionUseCase } from '../session.usecase';
@@ -17,7 +16,7 @@ describe('Session Controller', () => {
       providers: [
         SessionUseCase,
         {
-          provide: getRepositoryToken(UserRepository),
+          provide: PrismaService,
           useValue: {},
         },
       ],

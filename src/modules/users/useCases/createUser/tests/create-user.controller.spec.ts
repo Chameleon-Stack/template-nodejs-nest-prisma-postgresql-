@@ -1,10 +1,9 @@
 import { HttpStatus, INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { getRepositoryToken } from '@nestjs/typeorm';
 import request from 'supertest';
+import { PrismaService } from '../../../../../prisma.service';
 import { ICreateUserDTO } from '../../../dtos/request/create-user-request.dto';
-import { UserEntity } from '../../../entities/user.entity';
-import { UserRepository } from '../../../repositories/user.repository';
+import { UserEntityInterface } from '../../../interfaces/user-entity.interface';
 import { CreateUserController } from '../create-user.controller';
 import { CreateUserUseCase } from '../create-user.usecase';
 
@@ -18,7 +17,7 @@ describe('Create user Controller', () => {
       providers: [
         CreateUserUseCase,
         {
-          provide: getRepositoryToken(UserRepository),
+          provide: PrismaService,
           useValue: {},
         },
       ],
@@ -49,7 +48,7 @@ describe('Create user Controller', () => {
       email: 'test@example.com',
       password: '******',
     } as ICreateUserDTO;
-    const mockResponse = new UserEntity();
+    const mockResponse = {} as UserEntityInterface;
 
     const createUserUseCaseSpy = jest
       .spyOn(createUserUseCase, 'execute')

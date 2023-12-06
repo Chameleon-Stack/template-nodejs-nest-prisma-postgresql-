@@ -10,7 +10,7 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { BaseControllerInterface } from '../../../../common/interfaces/base-controller.interface';
 import { CustomApiResponseGetManyDataWrapper } from '../../../../system/decorators/swagger/api-response-get-many.decorator';
 import { CategoryEntityDTO } from '../../dtos/response/category.entity.dto';
-import { CategoryEntity } from '../../entities/category.entity';
+import { CategoryEntityInterface } from '../../interfaces/category-entity.interface';
 import { GetCategoriesUseCase } from './get-categories.usecase';
 
 @ApiTags('Category')
@@ -29,7 +29,7 @@ export class GetCategoriesController implements BaseControllerInterface {
   public async handle(
     @Param('user_id', new ParseUUIDPipe()) user_id: string,
     @Query() data: { name: string },
-  ): Promise<CategoryEntity[]> {
+  ): Promise<CategoryEntityInterface[]> {
     return this.getCategoriesUseCase.execute(user_id, data?.name);
   }
 }

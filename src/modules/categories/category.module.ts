@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { PrismaService } from '../../prisma.service';
 import { UserRepository } from '../users/repositories/user.repository';
-import { CategoryEntity } from './entities/category.entity';
 import { CategoryRepository } from './repositories/category.repository';
 import { CreateCategoryController } from './useCases/createCategory/create-category.controller';
 import { CreateCategoryUseCase } from './useCases/createCategory/create-category.usecase';
@@ -11,7 +10,7 @@ import { GetCategoriesController } from './useCases/getCategories/get-categories
 import { GetCategoriesUseCase } from './useCases/getCategories/get-categories.usecase';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([CategoryEntity])],
+  imports: [PrismaService],
   providers: [
     CreateCategoryUseCase,
     CategoryRepository,

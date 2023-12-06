@@ -1,8 +1,7 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { PrismaService } from '../../prisma.service';
 import { CardRepository } from '../cards/repositories/card.repository';
 import { CategoryRepository } from '../categories/repositories/category.repository';
-import { UserEntity } from './entities/user.entity';
 import { UserRepository } from './repositories/user.repository';
 import { CreateUserController } from './useCases/createUser/create-user.controller';
 import { CreateUserUseCase } from './useCases/createUser/create-user.usecase';
@@ -16,7 +15,7 @@ import { UpdateUserController } from './useCases/updateUser/update-user.controll
 import { UpdateUserUseCase } from './useCases/updateUser/update-user.usecase';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserEntity])],
+  imports: [PrismaService],
   providers: [
     UserRepository,
     CategoryRepository,

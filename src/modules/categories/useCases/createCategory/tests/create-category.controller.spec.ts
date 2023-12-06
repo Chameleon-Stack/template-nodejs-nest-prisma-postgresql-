@@ -1,10 +1,8 @@
 import { HttpStatus, INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { getRepositoryToken } from '@nestjs/typeorm';
 import request from 'supertest';
-import { UserRepository } from '../../../../users/repositories/user.repository';
-import { CategoryEntity } from '../../../entities/category.entity';
-import { CategoryRepository } from '../../../repositories/category.repository';
+import { PrismaService } from '../../../../../prisma.service';
+import { CategoryEntityInterface } from '../../../interfaces/category-entity.interface';
 import { CreateCategoryController } from '../create-category.controller';
 import { CreateCategoryUseCase } from '../create-category.usecase';
 
@@ -18,11 +16,7 @@ describe('Create category Controller', () => {
       providers: [
         CreateCategoryUseCase,
         {
-          provide: getRepositoryToken(CategoryRepository),
-          useValue: {},
-        },
-        {
-          provide: getRepositoryToken(UserRepository),
+          provide: PrismaService,
           useValue: {},
         },
       ],
@@ -50,7 +44,7 @@ describe('Create category Controller', () => {
   });
 
   it('Should be able to create category and return status 201', async () => {
-    const category = { name: 'Test category' } as CategoryEntity;
+    const category = { name: 'Test category' } as CategoryEntityInterface;
 
     const createCategoryUseCaseSpy = jest
       .spyOn(createCategoryUseCase, 'execute')

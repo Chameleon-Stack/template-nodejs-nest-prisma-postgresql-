@@ -3,16 +3,11 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { CategoryRepository } from '../../repositories/category.repository';
-import { CategoryRepositoryInterface } from '../../repositories/interfaces/category-repository.interface';
 
 @Injectable()
 export class DeleteCategoryUseCase {
-  constructor(
-    @InjectRepository(CategoryRepository)
-    private readonly categoryRepository: CategoryRepositoryInterface,
-  ) {}
+  constructor(private readonly categoryRepository: CategoryRepository) {}
 
   async execute(id: string): Promise<void> {
     if (!id) {

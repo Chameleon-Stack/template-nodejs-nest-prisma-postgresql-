@@ -1,19 +1,14 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { compare } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
 import { v4 as uuidV4 } from 'uuid';
-import { UserRepositoryInterface } from '../../repositories/interfaces/user-repository.interface';
 import { UserRepository } from '../../repositories/user.repository';
 import { SessionRequestDTO } from './dtos/request/session-request.dto';
 import { SessionResponseDTO } from './dtos/response/session-response.dto';
 
 @Injectable()
 export class SessionUseCase {
-  constructor(
-    @InjectRepository(UserRepository)
-    private readonly userRepository: UserRepositoryInterface,
-  ) {}
+  constructor(private readonly userRepository: UserRepository) {}
 
   public async execute({
     email,

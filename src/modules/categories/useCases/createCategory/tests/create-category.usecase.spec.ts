@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { getRepositoryToken } from '@nestjs/typeorm';
-import { UserEntity } from '../../../../users/entities/user.entity';
+import { PrismaService } from '../../../../../prisma.service';
+import { UserEntityInterface } from '../../../../users/interfaces/user-entity.interface';
 import { UserRepository } from '../../../../users/repositories/user.repository';
-import { CategoryEntity } from '../../../entities/category.entity';
+import { CategoryEntityInterface } from '../../../interfaces/category-entity.interface';
 import { CategoryRepository } from '../../../repositories/category.repository';
 import { CreateCategoryUseCase } from '../create-category.usecase';
 
@@ -16,13 +16,13 @@ describe('Create category UseCase', () => {
       providers: [
         CreateCategoryUseCase,
         {
-          provide: getRepositoryToken(CategoryRepository),
+          provide: PrismaService,
           useValue: {
             createAndSave: jest.fn(),
           },
         },
         {
-          provide: getRepositoryToken(UserRepository),
+          provide: PrismaService,
           useValue: {
             findById: jest.fn(),
           },
@@ -34,13 +34,10 @@ describe('Create category UseCase', () => {
       CreateCategoryUseCase,
     );
 
-    repositoryCategory = await module.resolve<CategoryRepository>(
-      getRepositoryToken(CategoryRepository),
-    );
+    repositoryCategory =
+      await module.resolve<CategoryRepository>(PrismaService);
 
-    repositoryUser = await module.resolve<UserRepository>(
-      getRepositoryToken(UserRepository),
-    );
+    repositoryUser = await module.resolve<UserRepository>(PrismaService);
   });
 
   afterEach(() => {
@@ -59,13 +56,13 @@ describe('Create category UseCase', () => {
       name: 'Test User',
       email: 'test@example.com',
       password: '******',
-    } as UserEntity;
+    } as UserEntityInterface;
 
     const category = {
       id: '2',
       user_id: user.id,
       name: 'Test category',
-    } as CategoryEntity;
+    } as CategoryEntityInterface;
 
     const findByIdUserSpy = jest
       .spyOn(repositoryUser, 'findById')

@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { getRepositoryToken } from '@nestjs/typeorm';
-import { UserEntity } from '../../../entities/user.entity';
+import { PrismaService } from '../../../../../prisma.service';
+import { UserEntityInterface } from '../../../interfaces/user-entity.interface';
 import { UserRepository } from '../../../repositories/user.repository';
 import { GetUserByIdUseCase } from '../get-user-by-id.usecase';
 
@@ -12,7 +12,7 @@ describe('Delete user UseCase', () => {
       providers: [
         GetUserByIdUseCase,
         {
-          provide: getRepositoryToken(UserRepository),
+          provide: PrismaService,
           useValue: {
             findById: jest.fn(),
             createAndSave: jest.fn(),
@@ -23,9 +23,7 @@ describe('Delete user UseCase', () => {
 
     getUserByIdUseCase = module.get<GetUserByIdUseCase>(GetUserByIdUseCase);
 
-    repository = await module.resolve<UserRepository>(
-      getRepositoryToken(UserRepository),
-    );
+    repository = await module.resolve<UserRepository>(PrismaService);
   });
 
   afterEach(() => {
@@ -43,7 +41,7 @@ describe('Delete user UseCase', () => {
       name: 'Test User',
       email: 'test@example.com',
       password: '******',
-    } as UserEntity;
+    } as UserEntityInterface;
 
     const createAndSaveUserSpy = jest
       .spyOn(repository, 'findById')
