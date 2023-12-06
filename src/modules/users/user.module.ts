@@ -15,7 +15,6 @@ import { UpdateUserController } from './useCases/updateUser/update-user.controll
 import { UpdateUserUseCase } from './useCases/updateUser/update-user.usecase';
 
 @Module({
-  imports: [PrismaService],
   providers: [
     UserRepository,
     CategoryRepository,
@@ -25,6 +24,7 @@ import { UpdateUserUseCase } from './useCases/updateUser/update-user.usecase';
     GetUserByIdUseCase,
     SessionUseCase,
     UpdateUserUseCase,
+    PrismaService,
   ],
   controllers: [
     CreateUserController,

@@ -10,7 +10,6 @@ import { GetCategoriesController } from './useCases/getCategories/get-categories
 import { GetCategoriesUseCase } from './useCases/getCategories/get-categories.usecase';
 
 @Module({
-  imports: [PrismaService],
   providers: [
     CreateCategoryUseCase,
     CategoryRepository,
@@ -18,6 +17,7 @@ import { GetCategoriesUseCase } from './useCases/getCategories/get-categories.us
     CreateCategoryUseCase,
     DeleteCategoryUseCase,
     GetCategoriesUseCase,
+    PrismaService,
   ],
   controllers: [
     CreateCategoryController,

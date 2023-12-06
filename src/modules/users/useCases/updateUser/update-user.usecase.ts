@@ -7,12 +7,12 @@ import { compare, hash } from 'bcryptjs';
 import fs from 'fs';
 import path from 'path';
 import { UserEntityInterface } from '../../interfaces/user-entity.interface';
-import { UserRepositoryInterface } from '../../repositories/interfaces/user-repository.interface';
+import { UserRepository } from '../../repositories/user.repository';
 import { UpdateUserDTO } from './dtos/request/update-user-request.dto';
 
 @Injectable()
 export class UpdateUserUseCase {
-  constructor(private readonly userRepository: UserRepositoryInterface) {}
+  constructor(private readonly userRepository: UserRepository) {}
 
   public async execute({
     id,

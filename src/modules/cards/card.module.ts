@@ -13,7 +13,6 @@ import { UpdateCardController } from './useCases/updateCard/update-card.controll
 import { UpdateCardUseCase } from './useCases/updateCard/update-card.usecase';
 
 @Module({
-  imports: [PrismaService],
   providers: [
     CardRepository,
     CategoryRepository,
@@ -22,6 +21,7 @@ import { UpdateCardUseCase } from './useCases/updateCard/update-card.usecase';
     DeleteCardUseCase,
     GetCardsUseCase,
     UpdateCardUseCase,
+    PrismaService,
   ],
   controllers: [
     CreateCardController,
