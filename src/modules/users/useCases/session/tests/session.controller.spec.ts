@@ -1,7 +1,7 @@
 import { HttpStatus, INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import request from 'supertest';
-import { PrismaService } from '../../../../../prisma.service';
+import { UserRepository } from '../../../repositories/user.repository';
 import { SessionResponseDTO } from '../dtos/response/session-response.dto';
 import { SessionController } from '../session.controller';
 import { SessionUseCase } from '../session.usecase';
@@ -16,7 +16,7 @@ describe('Session Controller', () => {
       providers: [
         SessionUseCase,
         {
-          provide: PrismaService,
+          provide: UserRepository,
           useValue: {},
         },
       ],

@@ -1,5 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PrismaService } from '../../../../../prisma.service';
 import { ICreateUserDTO } from '../../../dtos/request/create-user-request.dto';
 import { UserEntityInterface } from '../../../interfaces/user-entity.interface';
 import { UserRepository } from '../../../repositories/user.repository';
@@ -13,7 +12,7 @@ describe('Create user UseCase', () => {
       providers: [
         CreateUserUseCase,
         {
-          provide: PrismaService,
+          provide: UserRepository,
           useValue: {
             findByEmail: jest.fn(),
             createAndSave: jest.fn(),
@@ -24,7 +23,7 @@ describe('Create user UseCase', () => {
 
     createUserUseCase = module.get<CreateUserUseCase>(CreateUserUseCase);
 
-    repository = await module.resolve<UserRepository>(PrismaService);
+    repository = await module.resolve<UserRepository>(UserRepository);
   });
 
   afterEach(() => {

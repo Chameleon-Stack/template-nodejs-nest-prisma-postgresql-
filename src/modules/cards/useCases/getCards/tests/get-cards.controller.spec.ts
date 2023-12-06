@@ -1,7 +1,7 @@
 import { HttpStatus, INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import request from 'supertest';
-import { PrismaService } from '../../../../../prisma.service';
+import { CardRepository } from '../../../repositories/card.repository';
 import { FindAllCardsRequestDTO } from '../dtos/request/get-cards-request.dto';
 import { GetCardsController } from '../get-cards.controller';
 import { GetCardsUseCase } from '../get-cards.usecase';
@@ -16,7 +16,7 @@ describe('Get cards Controller', () => {
       providers: [
         GetCardsUseCase,
         {
-          provide: PrismaService,
+          provide: CardRepository,
           useValue: {},
         },
       ],

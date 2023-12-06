@@ -1,5 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PrismaService } from '../../../../../prisma.service';
 import { UserEntityInterface } from '../../../../users/interfaces/user-entity.interface';
 import { UserRepository } from '../../../../users/repositories/user.repository';
 import { CardEntityInterface } from '../../../interfaces/card-entity.interface';
@@ -17,7 +16,14 @@ describe('Create card UseCase', () => {
       providers: [
         CreateCardUseCase,
         {
-          provide: PrismaService,
+          provide: CardRepository,
+          useValue: {
+            createAndSave: jest.fn(),
+            findById: jest.fn(),
+          },
+        },
+        {
+          provide: UserRepository,
           useValue: {
             createAndSave: jest.fn(),
             findById: jest.fn(),
@@ -28,9 +34,9 @@ describe('Create card UseCase', () => {
 
     createCardUseCase = module.get<CreateCardUseCase>(CreateCardUseCase);
 
-    repositoryCard = await module.resolve<CardRepository>(PrismaService);
+    repositoryCard = await module.resolve<CardRepository>(CardRepository);
 
-    repositoryUser = await module.resolve<UserRepository>(PrismaService);
+    repositoryUser = await module.resolve<UserRepository>(UserRepository);
   });
 
   afterEach(() => {

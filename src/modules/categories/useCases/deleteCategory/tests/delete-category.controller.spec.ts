@@ -1,7 +1,7 @@
 import { HttpStatus, INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import request from 'supertest';
-import { PrismaService } from '../../../../../prisma.service';
+import { CategoryRepository } from '../../../repositories/category.repository';
 import { DeleteCategoryController } from '../delete-category.controller';
 import { DeleteCategoryUseCase } from '../delete-category.usecase';
 
@@ -15,7 +15,7 @@ describe('Delete category Controller', () => {
       providers: [
         DeleteCategoryUseCase,
         {
-          provide: PrismaService,
+          provide: CategoryRepository,
           useValue: {},
         },
       ],

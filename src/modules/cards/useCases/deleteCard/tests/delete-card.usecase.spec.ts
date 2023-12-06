@@ -1,5 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PrismaService } from '../../../../../prisma.service';
 import { CardEntityInterface } from '../../../interfaces/card-entity.interface';
 import { CardRepository } from '../../../repositories/card.repository';
 import { DeleteCardUseCase } from '../delete-card.usecase';
@@ -12,7 +11,7 @@ describe('Delete card UseCase', () => {
       providers: [
         DeleteCardUseCase,
         {
-          provide: PrismaService,
+          provide: CardRepository,
           useValue: {
             findById: jest.fn(),
             deleteCard: jest.fn(),
@@ -23,7 +22,7 @@ describe('Delete card UseCase', () => {
 
     deleteCardUseCase = module.get<DeleteCardUseCase>(DeleteCardUseCase);
 
-    repository = await module.resolve<CardRepository>(PrismaService);
+    repository = await module.resolve<CardRepository>(CardRepository);
   });
 
   afterEach(() => {

@@ -1,8 +1,8 @@
 import { HttpStatus, INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import request from 'supertest';
-import { PrismaService } from '../../../../../prisma.service';
 import { UserEntityInterface } from '../../../interfaces/user-entity.interface';
+import { UserRepository } from '../../../repositories/user.repository';
 import { GetUserByIdController } from '../get-user-by-id.controller';
 import { GetUserByIdUseCase } from '../get-user-by-id.usecase';
 
@@ -16,7 +16,7 @@ describe('Get user  by ID Controller', () => {
       providers: [
         GetUserByIdUseCase,
         {
-          provide: PrismaService,
+          provide: UserRepository,
           useValue: {},
         },
       ],

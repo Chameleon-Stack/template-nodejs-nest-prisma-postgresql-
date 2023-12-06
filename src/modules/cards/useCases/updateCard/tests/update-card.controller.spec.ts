@@ -1,8 +1,9 @@
 import { HttpStatus, INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import request from 'supertest';
-import { PrismaService } from '../../../../../prisma.service';
+import { CategoryRepository } from '../../../../categories/repositories/category.repository';
 import { CardEntityInterface } from '../../../interfaces/card-entity.interface';
+import { CardRepository } from '../../../repositories/card.repository';
 import { UpdateCardParamsRequestDTO } from '../dtos/request/update-card-params-request.dto copy';
 import { UpdateCardController } from '../update-card.controller';
 import { UpdateCardUseCase } from '../update-card.usecase';
@@ -17,7 +18,11 @@ describe('Update card Controller', () => {
       providers: [
         UpdateCardUseCase,
         {
-          provide: PrismaService,
+          provide: CardRepository,
+          useValue: {},
+        },
+        {
+          provide: CategoryRepository,
           useValue: {},
         },
       ],

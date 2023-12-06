@@ -1,5 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PrismaService } from '../../../../../prisma.service';
 import { CategoryEntityInterface } from '../../../interfaces/category-entity.interface';
 import { CategoryRepository } from '../../../repositories/category.repository';
 import { GetCategoriesUseCase } from '../get-categories.usecase';
@@ -13,7 +12,7 @@ describe('Get categories UseCase', () => {
       providers: [
         GetCategoriesUseCase,
         {
-          provide: PrismaService,
+          provide: CategoryRepository,
           useValue: {
             findAll: jest.fn(),
           },
@@ -25,7 +24,7 @@ describe('Get categories UseCase', () => {
       module.get<GetCategoriesUseCase>(GetCategoriesUseCase);
 
     repositoryCategory =
-      await module.resolve<CategoryRepository>(PrismaService);
+      await module.resolve<CategoryRepository>(CategoryRepository);
   });
 
   afterEach(() => {

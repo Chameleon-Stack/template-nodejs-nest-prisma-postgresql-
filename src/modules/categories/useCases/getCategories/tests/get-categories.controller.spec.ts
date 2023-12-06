@@ -1,8 +1,8 @@
 import { HttpStatus, INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import request from 'supertest';
-import { PrismaService } from '../../../../../prisma.service';
 import { CategoryEntityInterface } from '../../../interfaces/category-entity.interface';
+import { CategoryRepository } from '../../../repositories/category.repository';
 import { GetCategoriesController } from '../get-categories.controller';
 import { GetCategoriesUseCase } from '../get-categories.usecase';
 
@@ -16,7 +16,7 @@ describe('Get categories Controller', () => {
       providers: [
         GetCategoriesUseCase,
         {
-          provide: PrismaService,
+          provide: CategoryRepository,
           useValue: {},
         },
       ],

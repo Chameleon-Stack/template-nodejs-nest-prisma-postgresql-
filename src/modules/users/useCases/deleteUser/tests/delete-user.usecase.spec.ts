@@ -1,5 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PrismaService } from '../../../../../prisma.service';
 import { CardEntityInterface } from '../../../../cards/interfaces/card-entity.interface';
 import { CardRepository } from '../../../../cards/repositories/card.repository';
 import { CategoryEntityInterface } from '../../../../categories/interfaces/category-entity.interface';
@@ -19,21 +18,21 @@ describe('Delete user UseCase', () => {
       providers: [
         DeleteUserUseCase,
         {
-          provide: PrismaService,
+          provide: UserRepository,
           useValue: {
             findById: jest.fn(),
             deleteUser: jest.fn(),
           },
         },
         {
-          provide: PrismaService,
+          provide: CategoryRepository,
           useValue: {
             findAll: jest.fn(),
             deleteCategory: jest.fn(),
           },
         },
         {
-          provide: PrismaService,
+          provide: CardRepository,
           useValue: {
             findAll: jest.fn(),
             deleteCard: jest.fn(),
@@ -44,12 +43,12 @@ describe('Delete user UseCase', () => {
 
     deleteUserUseCase = module.get<DeleteUserUseCase>(DeleteUserUseCase);
 
-    repositoryUser = await module.resolve<UserRepository>(PrismaService);
+    repositoryUser = await module.resolve<UserRepository>(UserRepository);
 
     repositoryCategory =
-      await module.resolve<CategoryRepository>(PrismaService);
+      await module.resolve<CategoryRepository>(CategoryRepository);
 
-    repositoryCard = await module.resolve<CardRepository>(PrismaService);
+    repositoryCard = await module.resolve<CardRepository>(CardRepository);
   });
 
   afterEach(() => {

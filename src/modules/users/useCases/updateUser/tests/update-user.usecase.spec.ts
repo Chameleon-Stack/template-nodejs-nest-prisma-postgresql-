@@ -1,5 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PrismaService } from '../../../../../prisma.service';
 import { UserRepository } from '../../../repositories/user.repository';
 import { UpdateUserUseCase } from '../update-user.usecase';
 
@@ -11,7 +10,7 @@ describe('Update user UseCase', () => {
       providers: [
         UpdateUserUseCase,
         {
-          provide: PrismaService,
+          provide: UserRepository,
           useValue: {
             findById: jest.fn(),
             updateAndSave: jest.fn(),
@@ -22,7 +21,7 @@ describe('Update user UseCase', () => {
 
     updateUserUseCase = module.get<UpdateUserUseCase>(UpdateUserUseCase);
 
-    repository = await module.resolve<UserRepository>(PrismaService);
+    repository = await module.resolve<UserRepository>(UserRepository);
   });
 
   afterEach(() => {

@@ -1,9 +1,9 @@
 import { HttpStatus, INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import request from 'supertest';
-import { PrismaService } from '../../../../../prisma.service';
 import { ICreateUserDTO } from '../../../dtos/request/create-user-request.dto';
 import { UserEntityInterface } from '../../../interfaces/user-entity.interface';
+import { UserRepository } from '../../../repositories/user.repository';
 import { CreateUserController } from '../create-user.controller';
 import { CreateUserUseCase } from '../create-user.usecase';
 
@@ -17,7 +17,7 @@ describe('Create user Controller', () => {
       providers: [
         CreateUserUseCase,
         {
-          provide: PrismaService,
+          provide: UserRepository,
           useValue: {},
         },
       ],

@@ -1,8 +1,9 @@
 import { HttpStatus, INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import request from 'supertest';
-import { PrismaService } from '../../../../../prisma.service';
+import { UserRepository } from '../../../../users/repositories/user.repository';
 import { CategoryEntityInterface } from '../../../interfaces/category-entity.interface';
+import { CategoryRepository } from '../../../repositories/category.repository';
 import { CreateCategoryController } from '../create-category.controller';
 import { CreateCategoryUseCase } from '../create-category.usecase';
 
@@ -16,7 +17,11 @@ describe('Create category Controller', () => {
       providers: [
         CreateCategoryUseCase,
         {
-          provide: PrismaService,
+          provide: CategoryRepository,
+          useValue: {},
+        },
+        {
+          provide: UserRepository,
           useValue: {},
         },
       ],

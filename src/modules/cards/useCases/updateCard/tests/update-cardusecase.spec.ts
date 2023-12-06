@@ -1,5 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PrismaService } from '../../../../../prisma.service';
 import { CategoryRepository } from '../../../../categories/repositories/category.repository';
 import { CardRepository } from '../../../repositories/card.repository';
 import { UpdateCardUseCase } from '../update-card.usecase';
@@ -14,14 +13,14 @@ describe('Update card UseCase', () => {
       providers: [
         UpdateCardUseCase,
         {
-          provide: PrismaService,
+          provide: CardRepository,
           useValue: {
             findById: jest.fn(),
             updateAndSave: jest.fn(),
           },
         },
         {
-          provide: PrismaService,
+          provide: CategoryRepository,
           useValue: {
             findById: jest.fn(),
           },
@@ -31,10 +30,10 @@ describe('Update card UseCase', () => {
 
     updateCardUseCase = module.get<UpdateCardUseCase>(UpdateCardUseCase);
 
-    repositoryCard = await module.resolve<CardRepository>(PrismaService);
+    repositoryCard = await module.resolve<CardRepository>(CardRepository);
 
     repositoryCategory =
-      await module.resolve<CategoryRepository>(PrismaService);
+      await module.resolve<CategoryRepository>(CategoryRepository);
   });
 
   afterEach(() => {

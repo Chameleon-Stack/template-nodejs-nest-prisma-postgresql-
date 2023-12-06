@@ -1,5 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PrismaService } from '../../../../../prisma.service';
 import { CategoryEntityInterface } from '../../../interfaces/category-entity.interface';
 import { CategoryRepository } from '../../../repositories/category.repository';
 import { DeleteCategoryUseCase } from '../delete-category.usecase';
@@ -13,7 +12,7 @@ describe('Delete category UseCase', () => {
       providers: [
         DeleteCategoryUseCase,
         {
-          provide: PrismaService,
+          provide: CategoryRepository,
           useValue: {
             findById: jest.fn(),
             deleteCategory: jest.fn(),
@@ -27,7 +26,7 @@ describe('Delete category UseCase', () => {
     );
 
     repositoryCategory =
-      await module.resolve<CategoryRepository>(PrismaService);
+      await module.resolve<CategoryRepository>(CategoryRepository);
   });
 
   afterEach(() => {

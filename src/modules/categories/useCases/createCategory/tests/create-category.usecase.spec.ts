@@ -1,5 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PrismaService } from '../../../../../prisma.service';
 import { UserEntityInterface } from '../../../../users/interfaces/user-entity.interface';
 import { UserRepository } from '../../../../users/repositories/user.repository';
 import { CategoryEntityInterface } from '../../../interfaces/category-entity.interface';
@@ -16,13 +15,13 @@ describe('Create category UseCase', () => {
       providers: [
         CreateCategoryUseCase,
         {
-          provide: PrismaService,
+          provide: CategoryRepository,
           useValue: {
             createAndSave: jest.fn(),
           },
         },
         {
-          provide: PrismaService,
+          provide: UserRepository,
           useValue: {
             findById: jest.fn(),
           },
@@ -35,9 +34,9 @@ describe('Create category UseCase', () => {
     );
 
     repositoryCategory =
-      await module.resolve<CategoryRepository>(PrismaService);
+      await module.resolve<CategoryRepository>(CategoryRepository);
 
-    repositoryUser = await module.resolve<UserRepository>(PrismaService);
+    repositoryUser = await module.resolve<UserRepository>(UserRepository);
   });
 
   afterEach(() => {

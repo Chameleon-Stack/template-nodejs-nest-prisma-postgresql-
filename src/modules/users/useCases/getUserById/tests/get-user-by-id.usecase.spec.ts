@@ -1,5 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PrismaService } from '../../../../../prisma.service';
 import { UserEntityInterface } from '../../../interfaces/user-entity.interface';
 import { UserRepository } from '../../../repositories/user.repository';
 import { GetUserByIdUseCase } from '../get-user-by-id.usecase';
@@ -12,7 +11,7 @@ describe('Delete user UseCase', () => {
       providers: [
         GetUserByIdUseCase,
         {
-          provide: PrismaService,
+          provide: UserRepository,
           useValue: {
             findById: jest.fn(),
             createAndSave: jest.fn(),
@@ -23,7 +22,7 @@ describe('Delete user UseCase', () => {
 
     getUserByIdUseCase = module.get<GetUserByIdUseCase>(GetUserByIdUseCase);
 
-    repository = await module.resolve<UserRepository>(PrismaService);
+    repository = await module.resolve<UserRepository>(UserRepository);
   });
 
   afterEach(() => {

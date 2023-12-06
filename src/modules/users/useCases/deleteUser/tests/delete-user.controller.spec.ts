@@ -1,7 +1,9 @@
 import { HttpStatus, INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import request from 'supertest';
-import { PrismaService } from '../../../../../prisma.service';
+import { CardRepository } from '../../../../cards/repositories/card.repository';
+import { CategoryRepository } from '../../../../categories/repositories/category.repository';
+import { UserRepository } from '../../../repositories/user.repository';
 import { DeleteUserController } from '../delete-user.controller';
 import { DeleteUserUseCase } from '../delete-user.usecase';
 
@@ -15,7 +17,15 @@ describe('Delete user Controller', () => {
       providers: [
         DeleteUserUseCase,
         {
-          provide: PrismaService,
+          provide: UserRepository,
+          useValue: {},
+        },
+        {
+          provide: CategoryRepository,
+          useValue: {},
+        },
+        {
+          provide: CardRepository,
           useValue: {},
         },
       ],
