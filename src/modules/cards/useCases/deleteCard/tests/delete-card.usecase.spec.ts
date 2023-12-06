@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { getRepositoryToken } from '@nestjs/typeorm';
-import { CardEntity } from '../../../entities/card.entity';
+import { PrismaService } from '../../../../../prisma.service';
+import { CardEntityInterface } from '../../../interfaces/card-entity.interface';
 import { CardRepository } from '../../../repositories/card.repository';
 import { DeleteCardUseCase } from '../delete-card.usecase';
 
@@ -12,7 +12,7 @@ describe('Delete card UseCase', () => {
       providers: [
         DeleteCardUseCase,
         {
-          provide: getRepositoryToken(CardRepository),
+          provide: PrismaService,
           useValue: {
             findById: jest.fn(),
             deleteCard: jest.fn(),
@@ -23,9 +23,7 @@ describe('Delete card UseCase', () => {
 
     deleteCardUseCase = module.get<DeleteCardUseCase>(DeleteCardUseCase);
 
-    repository = await module.resolve<CardRepository>(
-      getRepositoryToken(CardRepository),
-    );
+    repository = await module.resolve<CardRepository>(PrismaService);
   });
 
   afterEach(() => {
@@ -44,7 +42,7 @@ describe('Delete card UseCase', () => {
       description: 'Create card',
       status: '10',
       title: 'Card',
-    } as CardEntity;
+    } as CardEntityInterface;
 
     const findByIdSpy = jest
       .spyOn(repository, 'findById')

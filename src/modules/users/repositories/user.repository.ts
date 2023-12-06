@@ -1,40 +1,35 @@
-import { Injectable } from '@nestjs/common';
-import { DataSource, Repository } from 'typeorm';
+import { PrismaService } from '../../../prisma.service';
 import { ICreateUserDTO } from '../dtos/request/create-user-request.dto';
-import { UserEntity } from '../entities/user.entity';
+import { UserEntityInterface } from '../interfaces/user-entity.interface';
 import { UserRepositoryInterface } from './interfaces/user-repository.interface';
 
-@Injectable()
-export class UserRepository
-  extends Repository<UserEntity>
-  implements UserRepositoryInterface
-{
-  constructor(private readonly dataSource: DataSource) {
-    super(UserEntity, dataSource.manager);
-  }
-  public async createAndSave(new_user: ICreateUserDTO): Promise<UserEntity> {
-    const user = this.create(new_user);
+export class UserRepository implements UserRepositoryInterface {
+  constructor(private prisma: PrismaService) {}
 
-    return await this.save(user);
+  async createAndSave(new_user: ICreateUserDTO): Promise<UserEntityInterface> {
+    return this.prisma.user.create({
+      data: new_user,
+    });
   }
-  public async updateAndSave(user: UserEntity): Promise<UserEntity> {
-    return await this.save(user);
+
+  async updateAndSave(user: UserEntityInterface): Promise<UserEntityInterface> {
+    return this.prisma.user.update({
+      where: { id: user.id },
+      data: user,
+    });
   }
-  public async findById(id: string): Promise<UserEntity> {
-    return this.dataSource
-      .createQueryBuilder(UserEntity, 'user')
-      .select('*')
-      .where(`"user"."id" = '${id}'`)
-      .getRawOne();
+
+  async findByEmail(email: string): Promise<UserEntityInterface | null> {
+    return this.prisma.user.findFirst({ where: { email } });
   }
-  public async findByEmail(email: string): Promise<UserEntity> {
-    return this.dataSource
-      .createQueryBuilder(UserEntity, 'user')
-      .select('*')
-      .where(`"user"."email" = '${email}'`)
-      .getRawOne();
+
+  async findById(id: string): Promise<UserEntityInterface | null> {
+    return this.prisma.user.findFirst({ where: { id } });
   }
-  public async deleteUser(user: UserEntity): Promise<void> {
-    await this.remove(user);
+
+  async deleteUser(user: UserEntityInterface): Promise<void> {
+    await this.prisma.user.delete({
+      where: { id: user.id },
+    });
   }
 }

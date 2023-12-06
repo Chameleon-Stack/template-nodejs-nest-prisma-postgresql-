@@ -1,51 +1,41 @@
-import { Injectable } from '@nestjs/common';
-import { DataSource, Repository } from 'typeorm';
-import { UserEntity } from '../../users/entities/user.entity';
-import { CategoryEntity } from '../entities/category.entity';
+import { PrismaService } from '../../../prisma.service';
+import { CategoryEntityInterface } from '../interfaces/category-entity.interface';
 import { CategoryRepositoryInterface } from './interfaces/category-repository.interface';
 
-@Injectable()
-export class CategoryRepository
-  extends Repository<CategoryEntity>
-  implements CategoryRepositoryInterface
-{
-  constructor(private readonly dataSource: DataSource) {
-    super(CategoryEntity, dataSource.manager);
-  }
-  public async createAndSave(
+export class CategoryRepository implements CategoryRepositoryInterface {
+  constructor(private prisma: PrismaService) {}
+
+  async createAndSave(
     name: string,
-    user: UserEntity,
-  ): Promise<CategoryEntity> {
-    const category = this.create({ name, user });
-
-    return await this.save(category);
+    user: any,
+  ): Promise<CategoryEntityInterface> {
+    return this.prisma.category.create({
+      data: {
+        name,
+        user_id: user.id,
+      },
+    });
   }
 
-  public async findById(id: string): Promise<CategoryEntity> {
-    return this.dataSource
-      .createQueryBuilder(CategoryEntity, 'category')
-      .select('*')
-      .where(`"category"."id" = '${id}'`)
-      .getRawOne();
-  }
-
-  public async findAll(
+  async findAll(
     user_id: string,
     name?: string,
-  ): Promise<CategoryEntity[]> {
-    const query = this.dataSource
-      .createQueryBuilder(CategoryEntity, 'category')
-      .select('*')
-      .where(`category.user_id = '${user_id}'`);
-
-    if (name) {
-      query.andWhere(`lower(category.name) ilike '%${name}%'`);
-    }
-
-    return query.getRawMany();
+  ): Promise<CategoryEntityInterface[]> {
+    return this.prisma.category.findMany({
+      where: {
+        user_id,
+        name: name ? { contains: name.toLowerCase() } : undefined,
+      },
+    });
   }
 
-  public async deleteCategory(category: CategoryEntity): Promise<void> {
-    await this.remove(category);
+  async findById(id: string): Promise<CategoryEntityInterface | null> {
+    return this.prisma.category.findFirst({ where: { id } });
+  }
+
+  async deleteCategory(category: CategoryEntityInterface): Promise<void> {
+    await this.prisma.category.delete({
+      where: { id: category.id },
+    });
   }
 }

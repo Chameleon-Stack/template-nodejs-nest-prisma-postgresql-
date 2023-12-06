@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { getRepositoryToken } from '@nestjs/typeorm';
+import { PrismaService } from '../../../../../prisma.service';
 import { FindAllCardsDTO } from '../../../dtos/request/find-all-cards-request.dto';
-import { CardEntity } from '../../../entities/card.entity';
+import { CardEntityInterface } from '../../../interfaces/card-entity.interface';
 import { CardRepository } from '../../../repositories/card.repository';
 import { GetCardsUseCase } from '../get-cards.usecase';
 
@@ -13,7 +13,7 @@ describe('Create user UseCase', () => {
       providers: [
         GetCardsUseCase,
         {
-          provide: getRepositoryToken(CardRepository),
+          provide: PrismaService,
           useValue: {
             findAll: jest.fn(),
           },
@@ -23,9 +23,7 @@ describe('Create user UseCase', () => {
 
     getCardsUseCase = module.get<GetCardsUseCase>(GetCardsUseCase);
 
-    repository = await module.resolve<CardRepository>(
-      getRepositoryToken(CardRepository),
-    );
+    repository = await module.resolve<CardRepository>(PrismaService);
   });
 
   afterEach(() => {
@@ -43,7 +41,7 @@ describe('Create user UseCase', () => {
         id: '2',
         user_id: 'uuid',
         title: 'Test category',
-      } as CardEntity,
+      } as CardEntityInterface,
     ];
 
     const findByIdUserSpy = jest

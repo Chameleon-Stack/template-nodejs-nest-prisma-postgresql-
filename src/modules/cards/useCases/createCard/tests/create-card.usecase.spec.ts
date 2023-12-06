@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { getRepositoryToken } from '@nestjs/typeorm';
-import { UserEntity } from '../../../../users/entities/user.entity';
+import { PrismaService } from '../../../../../prisma.service';
+import { UserEntityInterface } from '../../../../users/interfaces/user-entity.interface';
 import { UserRepository } from '../../../../users/repositories/user.repository';
-import { CardEntity } from '../../../entities/card.entity';
+import { CardEntityInterface } from '../../../interfaces/card-entity.interface';
 import { CardRepository } from '../../../repositories/card.repository';
 import { CreateCardUseCase } from '../create-card.usecase';
 import { CreateCardDTO } from '../dtos/request/create-card-request.dto';
@@ -17,14 +17,9 @@ describe('Create card UseCase', () => {
       providers: [
         CreateCardUseCase,
         {
-          provide: getRepositoryToken(CardRepository),
+          provide: PrismaService,
           useValue: {
             createAndSave: jest.fn(),
-          },
-        },
-        {
-          provide: getRepositoryToken(UserRepository),
-          useValue: {
             findById: jest.fn(),
           },
         },
@@ -33,13 +28,9 @@ describe('Create card UseCase', () => {
 
     createCardUseCase = module.get<CreateCardUseCase>(CreateCardUseCase);
 
-    repositoryCard = await module.resolve<CardRepository>(
-      getRepositoryToken(CardRepository),
-    );
+    repositoryCard = await module.resolve<CardRepository>(PrismaService);
 
-    repositoryUser = await module.resolve<UserRepository>(
-      getRepositoryToken(UserRepository),
-    );
+    repositoryUser = await module.resolve<UserRepository>(PrismaService);
   });
 
   afterEach(() => {
@@ -60,11 +51,11 @@ describe('Create card UseCase', () => {
       title: 'Card',
     } as CreateCardDTO;
 
-    const cardCreated = Object.assign(card, { id: '1' }) as CardEntity;
+    const cardCreated = Object.assign(card, { id: '1' }) as CardEntityInterface;
 
     const findUserByIdSpy = jest
       .spyOn(repositoryUser, 'findById')
-      .mockResolvedValueOnce({} as UserEntity);
+      .mockResolvedValueOnce({} as UserEntityInterface);
 
     const createAndSaveCardSpy = jest
       .spyOn(repositoryCard, 'createAndSave')

@@ -10,6 +10,7 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { BaseControllerInterface } from '../../../../common/interfaces/base-controller.interface';
 import { CustomApiResponseGetDataWrapper } from '../../../../system/decorators/swagger/api-response-get.decorator';
 import { CardEntityDTO } from '../../dtos/response/card.entity.dto';
+import { CardEntityInterface } from '../../interfaces/card-entity.interface';
 import { CreateCardUseCase } from './create-card.usecase';
 import { CreateCardDTO } from './dtos/request/create-card-request.dto';
 
@@ -29,7 +30,7 @@ export class CreateCardController implements BaseControllerInterface {
   public async handle(
     @Param('user_id', new ParseUUIDPipe()) user_id: string,
     @Body() card: CreateCardDTO,
-  ): Promise<CardEntityDTO> {
+  ): Promise<CardEntityInterface> {
     return this.createCardUseCase.execute({ ...card, user_id });
   }
 }

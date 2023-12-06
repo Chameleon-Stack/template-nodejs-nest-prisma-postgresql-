@@ -3,21 +3,16 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { CategoryRepository } from '../../../categories/repositories/category.repository';
 import { CategoryRepositoryInterface } from '../../../categories/repositories/interfaces/category-repository.interface';
-import { CardEntity } from '../../entities/card.entity';
-import { CardRepository } from '../../repositories/card.repository';
+import { CardEntityInterface } from '../../interfaces/card-entity.interface';
 import { CardRepositoryInterface } from '../../repositories/interfaces/card-repository.interface';
 import { UpdateCardDTO } from './dtos/request/update-card-request.dto';
 
 @Injectable()
 export class UpdateCardUseCase {
   constructor(
-    @InjectRepository(CardRepository)
     private readonly cardRepository: CardRepositoryInterface,
 
-    @InjectRepository(CategoryRepository)
     private readonly categoryRepository: CategoryRepositoryInterface,
   ) {}
 
@@ -27,7 +22,7 @@ export class UpdateCardUseCase {
     title,
     status,
     category_ids,
-  }: UpdateCardDTO): Promise<CardEntity> {
+  }: UpdateCardDTO): Promise<CardEntityInterface> {
     if (!id && (!description || !title || !status)) {
       throw new BadRequestException('The id or the value was not inserted!');
     }

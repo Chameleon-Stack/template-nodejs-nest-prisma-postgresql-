@@ -1,67 +1,62 @@
-import { Injectable } from '@nestjs/common';
-import { DataSource, Repository } from 'typeorm';
+import { PrismaService } from '../../../prisma.service';
+import { CreateAndSaveCardDTO } from '../dtos/request/create-card-request.dto';
 import { FindAllCardsDTO } from '../dtos/request/find-all-cards-request.dto';
-import { CardEntity } from '../entities/card.entity';
+import { CardEntityInterface } from '../interfaces/card-entity.interface';
 import { CardRepositoryInterface } from './interfaces/card-repository.interface';
 
-@Injectable()
-export class CardRepository
-  extends Repository<CardEntity>
-  implements CardRepositoryInterface
-{
-  constructor(private readonly dataSource: DataSource) {
-    super(CardEntity, dataSource.manager);
-  }
-  public async createAndSave(new_card: CardEntity): Promise<CardEntity> {
-    const card: CardEntity = this.create(new_card);
+export class CardRepository implements CardRepositoryInterface {
+  constructor(private prisma: PrismaService) {}
 
-    return await this.save(card);
-  }
-  public async updateAndSave(card: CardEntity): Promise<CardEntity> {
-    return await this.save(card);
-  }
-  public async findById(id: string): Promise<CardEntity> {
-    return this.dataSource
-      .createQueryBuilder(CardEntity, 'card')
-      .select('*')
-      .where(`"card"."id" = '${id}'`)
-      .getRawOne();
+  async createAndSave({
+    description,
+    status,
+    title,
+    user,
+  }: CreateAndSaveCardDTO): Promise<CardEntityInterface> {
+    return this.prisma.cards.create({
+      data: {
+        description,
+        status,
+        title,
+        user_id: user.id,
+      },
+    });
   }
 
-  public async findAll({
+  async updateAndSave(card: CardEntityInterface): Promise<CardEntityInterface> {
+    return this.prisma.cards.update({
+      where: { id: card.id },
+      data: card,
+    });
+  }
+
+  async findById(id: string): Promise<CardEntityInterface | null> {
+    return this.prisma.cards.findFirst({ where: { id } });
+  }
+
+  async findAll({
     id,
     description,
     status,
     title,
     user_id,
-  }: FindAllCardsDTO): Promise<CardEntity[]> {
-    const query = this.dataSource
-      .createQueryBuilder(CardEntity, 'card')
-      .select('*')
-      .where(`card.user_id = '${user_id}'`);
-
-    if (description) {
-      query.andWhere(`lower(card.description) ilike '%${description}%'`);
-    }
-
-    if (status) {
-      query.andWhere(`card.status = '${status}'`);
-    }
-
-    if (title) {
-      query.andWhere(`lower(card.title) ilike '%${title}%'`);
-    }
-
-    if (id) {
-      query.andWhere(`card.id = '${id}'`);
-    }
-
-    const cards = await query.getRawMany();
-
-    return cards;
+  }: FindAllCardsDTO): Promise<CardEntityInterface[]> {
+    return this.prisma.cards.findMany({
+      where: {
+        user_id,
+        id: id ? { equals: id } : undefined,
+        description: description
+          ? { contains: description.toLowerCase() }
+          : undefined,
+        status: status ? { equals: status } : undefined,
+        title: title ? { contains: title.toLowerCase() } : undefined,
+      },
+    });
   }
 
-  public async deleteCard(card: CardEntity): Promise<void> {
-    await this.remove(card);
+  async deleteCard(card: CardEntityInterface): Promise<void> {
+    await this.prisma.cards.delete({
+      where: { id: card.id },
+    });
   }
 }

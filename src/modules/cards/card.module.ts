@@ -1,8 +1,7 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { PrismaService } from '../../prisma.service';
 import { CategoryRepository } from '../categories/repositories/category.repository';
 import { UserRepository } from '../users/repositories/user.repository';
-import { CardEntity } from './entities/card.entity';
 import { CardRepository } from './repositories/card.repository';
 import { CreateCardController } from './useCases/createCard/create-card.controller';
 import { CreateCardUseCase } from './useCases/createCard/create-card.usecase';
@@ -14,7 +13,7 @@ import { UpdateCardController } from './useCases/updateCard/update-card.controll
 import { UpdateCardUseCase } from './useCases/updateCard/update-card.usecase';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([CardEntity])],
+  imports: [PrismaService],
   providers: [
     CardRepository,
     CategoryRepository,

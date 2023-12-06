@@ -1,8 +1,7 @@
 import { HttpStatus, INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { getRepositoryToken } from '@nestjs/typeorm';
 import request from 'supertest';
-import { CardRepository } from '../../../repositories/card.repository';
+import { PrismaService } from '../../../../../prisma.service';
 import { DeleteCardController } from '../delete-card.controller';
 import { DeleteCardUseCase } from '../delete-card.usecase';
 
@@ -16,7 +15,7 @@ describe('Delete card Controller', () => {
       providers: [
         DeleteCardUseCase,
         {
-          provide: getRepositoryToken(CardRepository),
+          provide: PrismaService,
           useValue: {},
         },
       ],
